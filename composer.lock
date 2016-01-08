@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "54bf7058a2bec6fde02f4db65d1b405e",
-    "content-hash": "6657105dd70223ca639c7b4680ee7466",
+    "hash": "51ccde5a5b12f8877c4a7ed01ae7a27f",
+    "content-hash": "8f41702d2053da69f22e0a350339f544",
     "packages": [
         {
             "name": "codeigniter/framework",
@@ -98,12 +98,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kenjis/ci-phpunit-test.git",
-                "reference": "fc2b6ec8122a3ea1c7721f501718961eeccb82a5"
+                "reference": "8d6903b4b6f279e1ae0b12fae8bcb5cc24f479ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kenjis/ci-phpunit-test/zipball/fc2b6ec8122a3ea1c7721f501718961eeccb82a5",
-                "reference": "fc2b6ec8122a3ea1c7721f501718961eeccb82a5",
+                "url": "https://api.github.com/repos/kenjis/ci-phpunit-test/zipball/8d6903b4b6f279e1ae0b12fae8bcb5cc24f479ba",
+                "reference": "8d6903b4b6f279e1ae0b12fae8bcb5cc24f479ba",
                 "shasum": ""
             },
             "require": {
@@ -137,7 +137,7 @@
                 "test",
                 "unit testing"
             ],
-            "time": "2016-01-07 14:00:04"
+            "time": "2016-01-08 22:20:27"
         },
         {
             "name": "mikey179/vfsStream",
@@ -1075,7 +1075,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.3.2"
+        "php": ">=5.4"
     },
     "platform-dev": []
 }
