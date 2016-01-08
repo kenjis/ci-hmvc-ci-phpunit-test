@@ -1,6 +1,6 @@
 <?php
 
-class Output_display extends MX_Controller
+class Output_display extends CI_Controller
 {
 	public function index()
 	{
