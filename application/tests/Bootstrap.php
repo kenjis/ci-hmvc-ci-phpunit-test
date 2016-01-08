@@ -295,7 +295,7 @@ switch (ENVIRONMENT)
  * If you want to use monkey patching, uncomment below code and configure
  * for your application.
  */
-/*
+
 require __DIR__ . '/_ci_phpunit_test/patcher/bootstrap.php';
 MonkeyPatchManager::init([
 	// PHP Parser: PREFER_PHP7, PREFER_PHP5, ONLY_PHP7, ONLY_PHP5
@@ -322,7 +322,7 @@ MonkeyPatchManager::init([
 	],
 	'exit_exception_classname' => 'CIPHPUnitTestExitException',
 ]);
-*/
+
 
 /*
  * -------------------------------------------------------------------
