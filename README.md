@@ -2,6 +2,7 @@
 
 * CodeIgniter 3.0.3
 * codeigniter-modular-extensions-hmvc codeigniter-3.x (2015-11-04)
+* PHPUnit 4.8.21
 * ci-phpunit-test 1.0.x@dev
 
 ## Requirements
