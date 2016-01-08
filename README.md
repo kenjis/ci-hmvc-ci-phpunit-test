@@ -8,7 +8,7 @@
 ## Note
 
 * codeigniter-modular-extensions-hmvc is popular but a very complex system, and is against CodeIgniter's basic design. It brings complexity to CodeIgniter.
-* So to work CodeIgniter HMVC and ci-phpunit-test together is still under way.
+* So to work CodeIgniter HMVC and ci-phpunit-test together is still under way. See <https://github.com/kenjis/ci-phpunit-test/issues/34>.
 * If you can avoid to use it, I recommend not use it. If you look for modular system, see <https://github.com/kenjis/codeigniter-simple-module>.
 
 ## Requirements
