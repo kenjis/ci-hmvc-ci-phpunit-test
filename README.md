@@ -5,6 +5,10 @@
 * PHPUnit 4.8.21
 * ci-phpunit-test 1.0.x@dev
 
+codeigniter-modular-extensions-hmvc is very complex system, and is against CodeIgnier's basic design. It brings complexity to CodeIgniter. So if you can avoid to use it, I recommend not use it.
+
+If you look for modular system, see <https://github.com/kenjis/codeigniter-simple-module>.
+
 ## Requirements
 
 * PHP 5.4 or later
