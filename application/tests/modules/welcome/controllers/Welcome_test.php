@@ -8,7 +8,7 @@
  * @link       https://github.com/kenjis/ci-phpunit-test
  */
 
-class Welcome_test extends TestCase
+class welcome_Welcome_test extends TestCase
 {
 	public function test_index()
 	{
