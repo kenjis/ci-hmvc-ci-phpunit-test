@@ -8,15 +8,14 @@
 
 * PHP 5.4 or later
 * composer
-* phpunit
 
 ## How to Run Tests
 
 ~~~
 $ git clone https://github.com/kenjis/ci-hmvc-ci-phpunit-test.git
-$ cd ci-hmvc-ci-phpunit-test
+$ cd ci-hmvc-ci-phpunit-test/
 $ composer install
-$ phpunit -c application/tests/
+$ vendor/bin/phpunit -c application/tests/
 ~~~
 
 ## References
