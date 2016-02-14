@@ -162,12 +162,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kenjis/ci-phpunit-test.git",
-                "reference": "8d6903b4b6f279e1ae0b12fae8bcb5cc24f479ba"
+                "reference": "9b6754226a388b4f33b2918bdb0b9abe9e1d2d40"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/kenjis/ci-phpunit-test/zipball/9b6754226a388b4f33b2918bdb0b9abe9e1d2d40",
-                "reference": "8d6903b4b6f279e1ae0b12fae8bcb5cc24f479ba",
+                "reference": "9b6754226a388b4f33b2918bdb0b9abe9e1d2d40",
                 "shasum": ""
             },
             "require": {
@@ -201,7 +201,7 @@
                 "test",
                 "unit testing"
             ],
-            "time": "2016-01-08 22:20:27"
+            "time": "2016-02-01 01:42:03"
         },
         {
             "name": "psy/psysh",
