@@ -18,6 +18,10 @@
 * PHP 5.4 or later
 * composer
 
+## Note to Use
+
+* Please try to use `MX_Controller` instead of `CI_Controller`, if you get errors.
+
 ## How to Run Tests
 
 ~~~
