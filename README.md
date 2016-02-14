@@ -11,7 +11,7 @@
 * So to work CodeIgniter HMVC and ci-phpunit-test together is still under way. See <https://github.com/kenjis/ci-phpunit-test/issues/34>.
 * If you can avoid to use it, I recommend not use it.
   * If you look for only modular system, see <https://github.com/kenjis/codeigniter-simple-module>.
-  * If you want reusable *widgets*, you can find *A Simple Widget System* in the Book *[Practical CodeIgniter 3](https://leanpub.com/practicalcodeigniter3)*. Or see [myth:Bay](https://github.com/newmythmedia/bay), which is a simple, framework-agnostic widget system.
+  * If you want reusable *widgets*, you can find *A Simple Widget System* in the Book *[Practical CodeIgniter 3](https://leanpub.com/practicalcodeigniter3)*. Or see <https://github.com/kenjis/codeigniter-widgets>.
 
 ## Requirements
 
