@@ -1,13 +1,14 @@
 {
 	"description" : "The CodeIgniter Application with Composer",
 	"require": {
-		"php": ">=5.4",
-		"codeigniter/framework": "3.0.*",
-		"psy/psysh": "@stable"
+		"php": ">=7.2",
+		"codeigniter/framework": "3.1.3",
+		"psy/psysh": "@stable",
+		"ext-json": "*"
 	},
 	"require-dev": {
-		"mikey179/vfsStream": "1.1.*",
+		"mikey179/vfsstream": "1.1.*",
 		"kenjis/ci-phpunit-test": "1.0.x@dev",
-		"phpunit/phpunit": "4.8.*"
+		"phpunit/phpunit": "^7.0"
 	}
 }
