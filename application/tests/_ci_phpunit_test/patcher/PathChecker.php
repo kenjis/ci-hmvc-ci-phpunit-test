@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of CI PHPUnit Test
+ * Part of ci-phpunit-test
  *
  * @author     Kenji Suzuki <https://github.com/kenjis>
  * @license    MIT License
@@ -42,7 +42,8 @@ class PathChecker
 			}
 			if (is_dir($real_path))
 			{
-				$real_path = $real_path . '/';
+				// Must use DIRECTORY_SEPARATOR for Windows
+				$real_path = $real_path . DIRECTORY_SEPARATOR;
 			}
 			$new_paths[] = $excluded ? '-'.$real_path : $real_path;
 		}
@@ -73,6 +74,11 @@ class PathChecker
 
 	public static function check($path)
 	{
+		// Windows
+		if (DIRECTORY_SEPARATOR === '\\') {
+			$path = str_replace('/', '\\', $path);
+		}
+
 		// Whitelist first
 		$is_white = false;
 		foreach (self::$include_paths as $white_dir) {

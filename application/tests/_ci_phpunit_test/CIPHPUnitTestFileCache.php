@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of CI PHPUnit Test
+ * Part of ci-phpunit-test
  *
  * @author     Kenji Suzuki <https://github.com/kenjis>
  * @license    MIT License
@@ -12,6 +12,7 @@ class CIPHPUnitTestFileCache implements ArrayAccess
 {
 	private $file;
 	private $map = [];
+	private $updated = false;
 
 	public function __construct($file)
 	{
@@ -42,7 +43,9 @@ class CIPHPUnitTestFileCache implements ArrayAccess
 
 	public function __destruct()
 	{
-		file_put_contents($this->file, serialize($this->map));
+		if ($this->updated) {
+			file_put_contents($this->file, serialize($this->map));
+		}
 	}
 
 	/**
@@ -60,6 +63,7 @@ class CIPHPUnitTestFileCache implements ArrayAccess
 	public function offsetSet($key, $value)
 	{
 		$this->map[$key] = $value;
+		$this->updated = true;
 	}
 
 	public function offsetGet($key)
@@ -82,5 +86,6 @@ class CIPHPUnitTestFileCache implements ArrayAccess
 	public function offsetUnset($key)
 	{
 		unset($this->map[$key]);
+		$this->updated = true;
 	}
 }
