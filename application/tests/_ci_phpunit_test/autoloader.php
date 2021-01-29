@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of CI PHPUnit Test
+ * Part of ci-phpunit-test
  *
  * @author     Kenji Suzuki <https://github.com/kenjis>
  * @license    MIT License
@@ -20,5 +20,5 @@ spl_autoload_register([$autoloader, 'load']);
 
 // Register CodeIgniter's tests/mocks/autoloader.php
 define('SYSTEM_PATH', BASEPATH);
-require APPPATH .'tests/mocks/autoloader.php';
+require TESTPATH .'mocks/autoloader.php';
 spl_autoload_register('autoload');

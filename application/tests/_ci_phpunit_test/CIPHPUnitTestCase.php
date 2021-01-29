@@ -1,12 +1,18 @@
 <?php
 /**
- * Part of CI PHPUnit Test
+ * Part of ci-phpunit-test
  *
  * @author     Kenji Suzuki <https://github.com/kenjis>
  * @license    MIT License
  * @copyright  2015 Kenji Suzuki
  * @link       https://github.com/kenjis/ci-phpunit-test
  */
+
+// Support PHPUnit 6.0
+if (! class_exists('PHPUnit_Framework_TestCase'))
+{
+	class_alias('PHPUnit\Framework\TestCase', 'PHPUnit_Framework_TestCase');
+}
 
 /**
  * @property CIPHPUnitTestRequest    $request
@@ -16,12 +22,29 @@
 class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 {
 	protected $_error_reporting = -1;
-	
+
+	/**
+	 * If you have a route with closure, PHPUnit can't serialize global variables.
+	 * You would see `Exception: Serialization of 'Closure' is not allowed`.
+	 *
+	 * @var array
+	 */
+	protected $backupGlobalsBlacklist = ['RTR'];
+
+	/**
+	 * Detect warnings and notices in a request output
+	 *
+	 * @var bool
+	 */
+	protected $strictRequestErrorCheck = true;
+
+	protected $restoreErrorHandler = false;
+
 	/**
 	 * @var CI_Controller CodeIgniter instance
 	 */
 	protected $CI;
-	
+
 	protected $class_map = [
 		'request'    => 'CIPHPUnitTestRequest',
 		'double'     => 'CIPHPUnitTestDouble',
@@ -31,6 +54,11 @@ class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 	public function setCI(CI_Controller $CI)
 	{
 		$this->CI = $CI;
+	}
+
+	public function getStrictRequestErrorCheck()
+	{
+		return $this->strictRequestErrorCheck;
 	}
 
 	public function __get($name)
@@ -52,20 +80,32 @@ class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 			'index.php',
 		];
 		$_SERVER['argc'] = 1;
+
+		// Reset current directroy
+		chdir(FCPATH);
+	}
+
+	public static function tearDownAfterClass()
+	{
+		CIPHPUnitTestDbConnectionStore::destory();
 	}
 
 	/**
 	 * Reset CodeIgniter instance and assign new CodeIgniter instance as $this->CI
+	 *
+	 *  @param bool $use_my_controller
 	 */
-	public function resetInstance()
+	public function resetInstance($use_my_controller = false)
 	{
 		reset_instance();
-		CIPHPUnitTest::createCodeIgniterInstance();
+		CIPHPUnitTest::createCodeIgniterInstance($use_my_controller);
 		$this->CI =& get_instance();
 	}
 
 	protected function tearDown()
 	{
+		$this->disableStrictErrorCheck();
+
 		if (class_exists('MonkeyPatch', false))
 		{
 			if (MonkeyPatchManager::isEnabled('FunctionPatcher'))
@@ -78,6 +118,11 @@ class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 				}
 
 				MonkeyPatch::resetFunctions();
+			}
+
+			if (MonkeyPatchManager::isEnabled('ConstantPatcher'))
+			{
+				MonkeyPatch::resetConstants();
 			}
 
 			if (MonkeyPatchManager::isEnabled('MethodPatcher'))
@@ -104,6 +149,35 @@ class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 	public function request($http_method, $argv, $params = [])
 	{
 		return $this->request->request($http_method, $argv, $params);
+	}
+
+	/**
+	 * Disable strict error check
+	 */
+	public function disableStrictErrorCheck()
+	{
+		if ($this->restoreErrorHandler) {
+			restore_error_handler();
+			$this->restoreErrorHandler = false;
+		}
+	}
+
+	/**
+	 * Enable strict error check
+	 */
+	public function enableStrictErrorCheck()
+	{
+		if ($this->restoreErrorHandler) {
+			throw new LogicException('Already strict error check mode');
+		}
+
+		set_error_handler(
+			function ($errno, $errstr, $errfile, $errline) {
+				throw new RuntimeException($errstr . ' on line ' . $errline . ' in file ' . $errfile);
+			}
+		);
+
+		$this->restoreErrorHandler = true;
 	}
 
 	/**
@@ -134,7 +208,7 @@ class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 	 * @param  string $classname
 	 * @param  array  $params             [method_name => return_value]
 	 * @param  bool   $enable_constructor enable constructor or not
-	 * @return object PHPUnit mock object
+	 * @return mixed  PHPUnit mock object
 	 */
 	public function getDouble($classname, $params, $enable_constructor = false)
 	{
@@ -163,7 +237,7 @@ class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 	 * 	]
 	 * );
 	 *
-	 * @param object $mock   PHPUnit mock object
+	 * @param mixed  $mock   PHPUnit mock object
 	 * @param string $method
 	 * @param int    $times
 	 * @param array  $params arguments
@@ -178,7 +252,7 @@ class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 	/**
 	 * Verifies a method was invoked at least once
 	 *
-	 * @param object $mock   PHPUnit mock object
+	 * @param mixed  $mock   PHPUnit mock object
 	 * @param string $method
 	 * @param array  $params arguments
 	 */
@@ -190,7 +264,7 @@ class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 	/**
 	 * Verifies that method was invoked only once
 	 *
-	 * @param object $mock   PHPUnit mock object
+	 * @param mixed  $mock   PHPUnit mock object
 	 * @param string $method
 	 * @param array  $params arguments
 	 */
@@ -202,7 +276,7 @@ class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 	/**
 	 * Verifies that method was not called
 	 *
-	 * @param object $mock   PHPUnit mock object
+	 * @param mixed  $mock   PHPUnit mock object
 	 * @param string $method
 	 * @param array  $params arguments
 	 */
@@ -225,7 +299,7 @@ class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 
 	/**
 	 * Asserts HTTP response code
-	 * 
+	 *
 	 * @param int $code
 	 */
 	public function assertResponseCode($code)
@@ -242,7 +316,7 @@ class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 
 	/**
 	 * Asserts HTTP response header
-	 * 
+	 *
 	 * @param string $name  header name
 	 * @param string $value header value
 	 */
@@ -265,7 +339,7 @@ class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 
 	/**
 	 * Asserts HTTP response cookie
-	 * 
+	 *
 	 * @param string       $name            cookie name
 	 * @param string|array $value           cookie value|array of cookie params
 	 * @param bool         $allow_duplicate whether to allow duplicated cookies
@@ -305,6 +379,16 @@ class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 			return;
 		}
 
+		// In case of $this->anything()
+		if (
+			$value instanceof PHPUnit_Framework_Constraint_IsAnything
+			|| $value instanceof PHPUnit\Framework\Constraint\IsAnything
+		)
+		{
+			$this->assertTrue(true);
+			return;
+		}
+
 		foreach ($value as $key => $val)
 		{
 			$this->assertEquals(
@@ -317,7 +401,7 @@ class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 
 	/**
 	 * Asserts Redirect
-	 * 
+	 *
 	 * @param string $uri  URI to redirect
 	 * @param int    $code response code
 	 */
@@ -335,7 +419,12 @@ class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 			$CI =& get_instance();
 			$CI->load->helper('url');
 		}
-		$absolute_url = site_url($uri);
+
+		if (! preg_match('#^(\w+:)?//#i', $uri))
+		{
+			$uri = site_url($uri);
+		}
+		$absolute_url = $uri;
 		$expected = 'Redirect to ' . $absolute_url;
 
 		$this->assertSame(
@@ -352,5 +441,17 @@ class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 				'Status code is not ' . $code . ' but ' . $status['code'] . '.'
 			);
 		}
+	}
+
+	/**
+	 * Asserts the message is logged
+	 *
+	 * @param string $level
+	 * @param string $message
+	 */
+	public function assertLogged($level, $message)
+	{
+		$result = CIPHPUnitTestLogger::didLog($level, $message);
+		$this->assertTrue($result);
 	}
 }

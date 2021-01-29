@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of CI PHPUnit Test
+ * Part of ci-phpunit-test
  *
  * @author     Kenji Suzuki <https://github.com/kenjis>
  * @license    MIT License
@@ -8,14 +8,35 @@
  * @link       https://github.com/kenjis/ci-phpunit-test
  */
 
-// Autoloader for PHP-Parser
-// Don't use `require`, because we must require it in CIPHPUnitTest::init()
-// for providing autoloading when we don't use Monkey Patching
-require_once __DIR__ . '/third_party/PHP-Parser/lib/bootstrap.php';
+// If you use Composer
+if (class_exists('PhpParser\Autoloader')) {
+	if (class_exists('PhpParser\Node\Identifier')) {
+		// PHP-Parser 4.x
+		require __DIR__ . '/4.x/MonkeyPatchManager.php';
+	}
+	elseif (method_exists('PhpParser\Node\Name','set')) {
+		// PHP-Parser 2.x
+		require __DIR__ . '/2.x/MonkeyPatchManager.php';
+	} else {
+		// PHP-Parser 3.x
+		require __DIR__ . '/3.x/MonkeyPatchManager.php';
+	}
+}
+// If you don't use Composer
+else {
+	if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
+		// Use PHP-Parser 3.x
+		require __DIR__ . '/third_party/PHP-Parser-3.1.5/lib/bootstrap.php';
+		require __DIR__ . '/3.x/MonkeyPatchManager.php';
+	} else {
+		// Use PHP-Parser 2.x
+		require __DIR__ . '/third_party/PHP-Parser-2.1.1/lib/bootstrap.php';
+		require __DIR__ . '/2.x/MonkeyPatchManager.php';
+	}
+}
 
 require __DIR__ . '/IncludeStream.php';
 require __DIR__ . '/PathChecker.php';
-require __DIR__ . '/MonkeyPatchManager.php';
 require __DIR__ . '/MonkeyPatch.php';
 require __DIR__ . '/Cache.php';
 require __DIR__ . '/InvocationVerifier.php';
@@ -33,7 +54,7 @@ class_alias('Kenjis\MonkeyPatch\MonkeyPatchManager', 'MonkeyPatchManager');
 //	// Project root directory
 //	'root_dir' => APPPATH . '../',
 //	// Cache directory
-//	'cache_dir' => APPPATH . 'tests/_ci_phpunit_test/tmp/cache',
+//	'cache_dir' => CI_PHPUNIT_TESTPATH . 'tmp/cache',
 //	// Directories to patch on source files
 //	'include_paths' => [
 //		APPPATH,
@@ -41,13 +62,14 @@ class_alias('Kenjis\MonkeyPatch\MonkeyPatchManager', 'MonkeyPatchManager');
 //	],
 //	// Excluding directories to patch
 //	'exclude_paths' => [
-//		APPPATH . 'tests/',
+//		TESTPATH,
 //	],
 //	// All patchers you use
 //	'patcher_list' => [
 //		'ExitPatcher',
 //		'FunctionPatcher',
 //		'MethodPatcher',
+//		'ConstantPatcher',
 //	],
 //	// Additional functions to patch
 //	'functions_to_patch' => [

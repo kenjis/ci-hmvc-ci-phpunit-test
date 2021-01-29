@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of CI PHPUnit Test
+ * Part of ci-phpunit-test
  *
  * @author     Kenji Suzuki <https://github.com/kenjis>
  * @license    MIT License
@@ -10,7 +10,7 @@
 
 /**
  * Inject instance to load_class() function
- * 
+ *
  * @param string $classname
  * @param object $instance
  */
@@ -56,8 +56,19 @@ function reset_instance()
 	CIPHPUnitTestSuperGlobal::set_Global('BM', $BM);
 	$EXT =& load_class('Hooks', 'core');
 	CIPHPUnitTestSuperGlobal::set_Global('EXT', $EXT);
+
 	$CFG =& load_class('Config', 'core');
 	CIPHPUnitTestSuperGlobal::set_Global('CFG', $CFG);
+	// Do we have any manually set config items in the index.php file?
+	global $assign_to_config;
+	if (isset($assign_to_config) && is_array($assign_to_config))
+	{
+		foreach ($assign_to_config as $key => $value)
+		{
+			$CFG->set_item($key, $value);
+		}
+	}
+
 	$UNI =& load_class('URI', 'core');
 	CIPHPUnitTestSuperGlobal::set_Global('UNI', $UNI);
 //	$URI =& load_class('Utf8', 'core');
@@ -74,14 +85,20 @@ function reset_instance()
 	CIPHPUnitTestSuperGlobal::set_Global('LANG', $LANG);
 
 	CIPHPUnitTest::loadLoader();
+	if (CIPHPUnitTest::wiredesignzHmvcInstalled()) {
+		CIPHPUnitTest::loadConfig();
+	}
 
 	// Remove CodeIgniter instance
 	$CI = new CIPHPUnitTestNullCodeIgniter();
+
+	// Reset Logs
+	CIPHPUnitTestLogger::resetLogs();
 }
 
 /**
  * Set return value of is_cli() function
- * 
+ *
  * @param bool $return
  */
 function set_is_cli($return)
@@ -96,4 +113,17 @@ function reset_config()
 {
 	get_config([], TRUE);
 	config_item(NULL, TRUE);
+}
+
+if ( ! function_exists('is_testing_env'))
+{
+	/**
+	 * Testing Environment or not?
+	 *
+	 * @return bool
+	 */
+	function is_testing_env()
+	{
+		return (ENVIRONMENT === 'testing');
+	}
 }

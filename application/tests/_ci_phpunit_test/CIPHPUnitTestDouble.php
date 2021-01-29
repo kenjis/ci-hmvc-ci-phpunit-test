@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of CI PHPUnit Test
+ * Part of ci-phpunit-test
  *
  * @author     Kenji Suzuki <https://github.com/kenjis>
  * @license    MIT License
@@ -32,28 +32,64 @@ class CIPHPUnitTestDouble
 	 *
 	 * @param  string $classname
 	 * @param  array  $params             [method_name => return_value]
-	 * @param  bool   $enable_constructor enable constructor or not
-	 * @return object PHPUnit mock object
+	 * @param  mixed  $constructor_params false: disable constructor, array: constructor params
+	 *
+	 * @return mixed PHPUnit mock object
 	 */
-	public function getDouble($classname, $params, $enable_constructor = false)
+	public function getDouble($classname, $params, $constructor_params = false)
 	{
-		$methods = array_keys($params);
-
 		// `disableOriginalConstructor()` is the default, because if we call
-		// construnctor, it may call `$this->load->...` or other CodeIgniter
+		// constructor, it may call `$this->load->...` or other CodeIgniter
 		// methods in it. But we can't use them in
 		// `$this->request->setCallablePreConstructor()`
-		$mock = $this->testCase->getMockBuilder($classname);
-		if (! $enable_constructor)
+		$mockBuilder = $this->testCase->getMockBuilder($classname);
+		if ($constructor_params === false)
 		{
-			$mock->disableOriginalConstructor();
+			$mockBuilder->disableOriginalConstructor();
 		}
-		$mock = $mock->setMethods($methods)->getMock();
-
-		foreach ($params as $method => $return)
+		elseif (is_array($constructor_params))
 		{
+			$mockBuilder->setConstructorArgs($constructor_params);
+		}
+
+		$methods = [];
+		$onConsecutiveCalls = [];
+		$otherCalls = [];
+
+		foreach ($params as $key => $val) {
+			if (is_int($key)) {
+				$onConsecutiveCalls = array_merge($onConsecutiveCalls, $val);
+				$methods[] = array_keys($val)[0];
+			} else {
+				$otherCalls[$key] = $val;
+				$methods[] = $key;
+			}
+		}
+
+		$mock = $mockBuilder->setMethods($methods)->getMock();
+
+		foreach ($onConsecutiveCalls as $method => $returns) {
 			$mock->expects($this->testCase->any())->method($method)
-				->willReturn($return);
+				->will(
+					call_user_func_array(
+						[$this->testCase, 'onConsecutiveCalls'],
+						$returns
+					)
+				);
+		}
+
+		foreach ($otherCalls as $method => $return)
+		{
+			if (is_object($return) && ($return instanceof PHPUnit_Framework_MockObject_Stub || $return instanceof PHPUnit\Framework\MockObject\Stub)) {
+				$mock->expects($this->testCase->any())->method($method)
+					->will($return);
+			} elseif (is_object($return) && $return instanceof Closure) {
+				$mock->expects($this->testCase->any())->method($method)
+					->willReturnCallback($return);
+			} else {
+				$mock->expects($this->testCase->any())->method($method)
+					->willReturn($return);
+			}
 		}
 
 		return $mock;
@@ -64,41 +100,11 @@ class CIPHPUnitTestDouble
 		$invocation = $mock->expects($expects)
 			->method($method);
 
-		$count = count($params);
-
-		switch ($count) {
-			case 0:
-				break;
-			case 1:
-				$invocation->$with(
-					$params[0]
-				);
-				break;
-			case 2:
-				$invocation->$with(
-					$params[0], $params[1]
-				);
-				break;
-			case 3:
-				$invocation->$with(
-					$params[0], $params[1], $params[2]
-				);
-				break;
-			case 4:
-				$invocation->$with(
-					$params[0], $params[1], $params[2], $params[3]
-				);
-				break;
-			case 5:
-				$invocation->$with(
-					$params[0], $params[1], $params[2], $params[3], $params[4]
-				);
-				break;
-			default:
-				throw new RuntimeException(
-					'Sorry, ' . $count . ' params not implemented yet'
-				);
+		if ($params === null) {
+			return;
 		}
+
+		call_user_func_array([$invocation, $with], $params);
 	}
 
 	/**
@@ -123,7 +129,7 @@ class CIPHPUnitTestDouble
 	 * 	]
 	 * );
 	 *
-	 * @param object $mock   PHPUnit mock object
+	 * @param mixed  $mock   PHPUnit mock object
 	 * @param string $method
 	 * @param int    $times
 	 * @param array  $params arguments
@@ -138,7 +144,7 @@ class CIPHPUnitTestDouble
 	/**
 	 * Verifies a method was invoked at least once
 	 *
-	 * @param object $mock   PHPUnit mock object
+	 * @param mixed  $mock   PHPUnit mock object
 	 * @param string $method
 	 * @param array  $params arguments
 	 */
@@ -152,7 +158,7 @@ class CIPHPUnitTestDouble
 	/**
 	 * Verifies that method was invoked only once
 	 *
-	 * @param object $mock   PHPUnit mock object
+	 * @param mixed  $mock   PHPUnit mock object
 	 * @param string $method
 	 * @param array  $params arguments
 	 */
@@ -166,7 +172,7 @@ class CIPHPUnitTestDouble
 	/**
 	 * Verifies that method was not called
 	 *
-	 * @param object $mock   PHPUnit mock object
+	 * @param mixed  $mock   PHPUnit mock object
 	 * @param string $method
 	 * @param array  $params arguments
 	 */

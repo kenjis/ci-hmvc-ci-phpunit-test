@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of CI PHPUnit Test
+ * Part of ci-phpunit-test
  *
  * @author     Kenji Suzuki <https://github.com/kenjis>
  * @license    MIT License
@@ -42,6 +42,7 @@ class CIPHPUnitTestAutoloader
 				APPPATH.'libraries',
 				APPPATH.'controllers',
 				APPPATH.'modules',
+				APPPATH.'hooks',
 			];
 		}
 		else
