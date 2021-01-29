@@ -10,5 +10,8 @@
 		"mikey179/vfsstream": "1.1.*",
 		"kenjis/ci-phpunit-test": "1.0.x@dev",
 		"phpunit/phpunit": "^7.0"
+	},
+	"scripts": {
+		"test": "vendor/bin/phpunit -c application/tests/"
 	}
 }
