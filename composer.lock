@@ -4,27 +4,28 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4506737e4c8936f3c0e29cc5d634d403",
+    "content-hash": "309f668075e1337250e82b3baea59029",
     "packages": [
         {
             "name": "codeigniter/framework",
-            "version": "3.1.3",
+            "version": "3.1.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bcit-ci/CodeIgniter.git",
-                "reference": "5ea77465c445157fb1096c38f5c2d27384b780b7"
+                "reference": "b73eb19aed66190c10c9cad476da7c36c271d6dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bcit-ci/CodeIgniter/zipball/5ea77465c445157fb1096c38f5c2d27384b780b7",
-                "reference": "5ea77465c445157fb1096c38f5c2d27384b780b7",
+                "url": "https://api.github.com/repos/bcit-ci/CodeIgniter/zipball/b73eb19aed66190c10c9cad476da7c36c271d6dc",
+                "reference": "b73eb19aed66190c10c9cad476da7c36c271d6dc",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.2.4"
+                "php": ">=5.3.7"
             },
             "require-dev": {
-                "mikey179/vfsstream": "1.1.*"
+                "mikey179/vfsstream": "1.1.*",
+                "phpunit/phpunit": "4.* || 5.*"
             },
             "suggest": {
                 "paragonie/random_compat": "Provides better randomness in PHP 5.x"
@@ -38,12 +39,12 @@
             "homepage": "https://codeigniter.com",
             "support": {
                 "forum": "http://forum.codeigniter.com/",
-                "irc": "irc://irc.freenode.net/codeigniter",
                 "issues": "https://github.com/bcit-ci/CodeIgniter/issues",
+                "slack": "https://codeigniterchat.slack.com",
                 "source": "https://github.com/bcit-ci/CodeIgniter",
                 "wiki": "https://github.com/bcit-ci/CodeIgniter/wiki"
             },
-            "time": "2017-01-09T14:32:03+00:00"
+            "time": "2019-09-19T12:08:45+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -2805,7 +2806,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.2"
+        "php": ">=7.2",
+        "ext-json": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.0.0"
