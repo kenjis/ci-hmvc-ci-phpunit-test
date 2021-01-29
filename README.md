@@ -31,7 +31,7 @@ If you want to see PHP5 code, check out <https://github.com/kenjis/ci-hmvc-ci-ph
 $ git clone https://github.com/kenjis/ci-hmvc-ci-phpunit-test.git
 $ cd ci-hmvc-ci-phpunit-test/
 $ composer install
-$ vendor/bin/phpunit -c application/tests/
+$ composer test
 ~~~
 
 ## References
