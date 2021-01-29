@@ -6,6 +6,8 @@
 * PHPUnit 7.5.20
 * ci-phpunit-test 1.0.x@dev
 
+If you want to see PHP5 code, check out <https://github.com/kenjis/ci-hmvc-ci-phpunit-test/tree/php54>.
+
 ## Note
 
 * codeigniter-modular-extensions-hmvc is popular but a very complex system, and is against CodeIgniter's basic design. It brings complexity to CodeIgniter.
