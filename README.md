@@ -1,8 +1,9 @@
 # CodeIgniter HMVC and ci-phpunit-test
 
-* CodeIgniter 3.0.3
-* codeigniter-modular-extensions-hmvc codeigniter-3.x (2015-11-04)
-* PHPUnit 4.8.21
+* CodeIgniter 3.1.11
+* codeigniter-modular-extensions-hmvc codeigniter-3.x
+  * From <https://github.com/lemondropsarl/webase>
+* PHPUnit 7.5.20
 * ci-phpunit-test 1.0.x@dev
 
 ## Note
@@ -15,7 +16,7 @@
 
 ## Requirements
 
-* PHP 5.4 or later
+* PHP 7.2 or later
 * composer
 
 ## Note to Use
